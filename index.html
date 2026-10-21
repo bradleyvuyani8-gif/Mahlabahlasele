@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mahlabahlasele</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="login" class="overlay" hidden>
+  <form id="loginForm" class="panel login">
+    <h2>Enter your dashboard token</h2>
+    <p class="hint">It was printed in the Termux window when the server started, and is saved in <code>data/token.txt</code>.</p>
+    <input id="tokenInput" type="password" autocomplete="off" placeholder="Token" required>
+    <button class="primary">Open dashboard</button>
+    <p id="loginErr" class="err"></p>
+  </form>
+</div>
+
+<header class="top">
+  <h1>Mahlabahlasele</h1>
+  <span id="pill" class="pill off">Stopped</span>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="eqhead">
+      <div><div id="equity" class="big">-</div><div id="pnl" class="sub"></div></div>
+      <div class="actions">
+        <button id="btnStart" class="primary">Start bot</button>
+        <button id="btnStop">Stop bot</button>
+      </div>
+    </div>
+    <canvas id="chart" height="190" aria-label="Equity curve with the circuit-breaker halt level"></canvas>
+    <p class="legend"><i class="k eqk"></i>Equity <i class="k haltk"></i>Halt level (breaker trips below this)</p>
+    <dl id="stats" class="stats"></dl>
+    <div id="breaker" class="breaker"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Right now</h2>
+    <div id="now" class="kv"></div>
+  </section>
+
+  <section class="panel">
+    <h2>What the bot is learning</h2>
+    <p class="hint">Each closed trade is scored by how many times its risk it won or lost (capped). The bot favours the strategy and risk style that scored best in each market type.</p>
+    <div id="learnStats" class="kv"></div>
+    <canvas id="rewardChart" height="90" aria-label="Recent trade rewards"></canvas>
+    <table id="armsTable"><thead><tr><th>Market and approach</th><th>Trades</th><th>Avg reward</th></tr></thead><tbody></tbody></table>
+  </section>
+
+  <section class="panel">
+    <h2>Parameters</h2>
+    <form id="params"></form>
+    <p id="paramsMsg" class="msg"></p>
+  </section>
+
+  <section class="panel">
+    <h2>Backtest</h2>
+    <p class="hint">Test the strategies on history before trusting them. Walk-forward trains on the first 70% and scores the unseen last 30%.</p>
+    <div class="row">
+      <label>Data<select id="btSource"><option value="synthetic">Synthetic (demo)</option><option value="exchange">Recent exchange candles</option><option value="csv">My CSV file</option></select></label>
+      <label>Candles<input id="btCandles" type="number" value="3000" min="400" max="20000"></label>
+      <label class="check"><input id="btWalk" type="checkbox" checked>Walk-forward</label>
+    </div>
+    <button id="btRun" class="primary">Run backtest</button>
+    <p id="btMsg" class="msg"></p>
+    <div id="btOut"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Connections</h2>
+    <p class="hint">Stored only on this device in <code>data/secrets.json</code>. Saved keys are never shown again; leave a field empty to keep its current value.</p>
+    <form id="keys"></form>
+    <p id="keysMsg" class="msg"></p>
+  </section>
+
+  <section class="panel wide">
+    <h2>Trades</h2>
+    <div class="scroll"><table id="tradesTable"><thead><tr><th>Closed</th><th>Side</th><th>Approach</th><th>Exit</th><th>P&amp;L</th><th>R</th><th>Reward</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel wide">
+    <h2>Activity</h2>
+    <ul id="logs" class="logs"></ul>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
